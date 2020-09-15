@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <RootNamespace>Regira.Stakeholders.Library</RootNamespace>
+    <PackageId>Regira.Stakeholders.Library</PackageId>
+    <AssemblyName>Regira.Stakeholders.Library</AssemblyName>
+    <LangVersion>latest</LangVersion>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <Authors>B.Verboven</Authors>
+    <Company>Regira</Company>
+    <Version>1.0.0</Version>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="EFCore.NamingConventions" Version="1.1.0" />
+    <PackageReference Include="Regira.TreeList" Version="1.0.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Stakeholders.Core\Stakeholders.Core.csproj" />
+  </ItemGroup>
+
+</Project>
