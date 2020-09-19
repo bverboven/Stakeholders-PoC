@@ -79,11 +79,11 @@ namespace Regira.Stakeholders.ConsoleApp
                 var roles = new Faker<ContactRole>()
                     .RuleFor(x => x.Title, (f, x) => f.Name.JobType());
                 var contacts = new Faker<StakeholderContact>()
-                    .RuleFor(x => x.Stakeholder, (f, x) => f.PickRandom(stakeholders))
-                    .RuleFor(x => x.Contact, (f, x) => f.PickRandom(stakeholders))
+                    .RuleFor(x => x.RoleGiver, (f, x) => f.PickRandom(stakeholders))
+                    .RuleFor(x => x.RoleBearer, (f, x) => f.PickRandom(stakeholders))
                     .RuleFor(x => x.Role, (f, x) => f.PickRandom(roles))
                     .Generate(count)
-                    .FindAll(c => c.Stakeholder != c.Contact);
+                    .FindAll(c => c.RoleGiver != c.RoleBearer);
                 
                 _db.StakeholderContacts.AddRange(contacts);
                 _db.SaveChanges();

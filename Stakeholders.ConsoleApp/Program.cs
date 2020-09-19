@@ -44,6 +44,10 @@ namespace Regira.Stakeholders.ConsoleApp
                 targetDb.Database.EnsureDeleted();
                 // Create DB from Context and apply Migrations
                 targetDb.Database.Migrate();
+                foreach (var sp in StoredProcedures.CREATE_ALL)
+                {
+                    targetDb.Database.ExecuteSqlRaw(sp);
+                }
             }
 
             if (seed)
@@ -108,15 +112,15 @@ namespace Regira.Stakeholders.ConsoleApp
 
             var resultIds = db.StakeholderContacts.FromSqlInterpolated($"CALL contacts_offspring({param},{null})")
                 .ToList()
-                .SelectMany(c => new[] { c.StakeholderId, c.ContactId })
+                .SelectMany(c => new[] { c.RoleGiverId, c.RoleBearerId })
                 .Distinct()
                 .ToList();
             var end1 = (DateTime.Now - start).TotalSeconds;
             var stakeholders = db.Stakeholders.Where(x => resultIds.Contains(x.Id))
                 .Include(x => x.Contacts)
-                .ThenInclude(c => c.Stakeholder)
+                .ThenInclude(c => c.RoleGiver)
                 .Include(x => x.Contacts)
-                .ThenInclude(c => c.Contact)
+                .ThenInclude(c => c.RoleBearer)
                 .ToList();
             start = DateTime.Now;
             var tree = stakeholders.ToStakeholdersTree();

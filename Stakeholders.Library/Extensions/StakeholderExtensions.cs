@@ -21,7 +21,7 @@ namespace Regira.Stakeholders.Library.Extensions
         {
             var tree = new TreeList<Stakeholder>();
             var rootValues = stakeholders
-                .Where(s => !contacts.Any(c => c.Contact == s || c.ContactId == s.Id))
+                .Where(s => !contacts.Any(c => c.RoleBearer == s || c.RoleBearerId == s.Id))
                 .ToList();
             foreach (var stakeholder in rootValues)
             {
@@ -35,13 +35,13 @@ namespace Regira.Stakeholders.Library.Extensions
         {
             //var nodeAncestors = node.GetAncestors().ToArray();
             var children = contacts
-                .Where(c => c.Stakeholder == node.Value)
+                .Where(c => c.RoleGiver == node.Value)
                 // avoid infinite recursion
                 //.Where(c => !nodeAncestors.Any(a => a.Value == c.Stakeholder || a.Value.Id == c.StakeholderId))
                 .ToList();
             foreach (var child in children)
             {
-                var childNode = node.AddChild(child.Contact);
+                var childNode = node.AddChild(child.RoleBearer);
                 AddChildren(contacts, childNode);
             }
         }

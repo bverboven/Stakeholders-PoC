@@ -55,36 +55,29 @@ namespace Regira.Stakeholders.Library.Data
                     cb.Property(a => a.Number).HasColumnName($"{prefix}_number");
                 });
                 entity.HasMany(e => e.Contacts)
-                    .WithOne(c => c.Stakeholder)
-                    .HasForeignKey(s => s.StakeholderId);
+                    .WithOne(c => c.RoleGiver)
+                    .HasForeignKey(s => s.RoleGiverId);
             });
             // Organization
             modelBuilder.Entity<Organization>(entity =>
             {
                 entity.HasBaseType<Stakeholder>();
-                //entity.HasIndex(e => e.NormalizedTitle);
                 entity.HasIndex(e => e.Kbo);
-                //entity.HasIndex(e => e.NormalizedAddress);
-                //entity.HasIndex(e => e.IsArchived);
             });
             // Person
             modelBuilder.Entity<Person>(entity =>
             {
                 entity.HasBaseType<Stakeholder>();
-                //entity.HasIndex(e => e.NormalizedGivenName);
-                //entity.HasIndex(e => e.NormalizedFamilyName);
                 entity.HasIndex(e => e.Kbo);
-                //entity.HasIndex(e => e.NormalizedAddress);
-                //entity.HasIndex(e => e.IsArchived);
             });
             // OrganizationContact
             modelBuilder.Entity<StakeholderContact>(entity =>
             {
                 entity
-                    .HasKey(e => new { ParentId = e.StakeholderId, e.ContactId, e.RoleId });
-                entity.HasOne(e => e.Stakeholder)
+                    .HasKey(e => new { e.RoleGiverId, e.RoleBearerId, e.RoleId });
+                entity.HasOne(e => e.RoleGiver)
                     .WithMany(s => s.Contacts)
-                    .HasForeignKey(s => s.StakeholderId);
+                    .HasForeignKey(s => s.RoleGiverId);
             });
 
             // https://stackoverflow.com/questions/43277154/entity-framework-core-setting-the-decimal-precision-and-scale-to-all-decimal-p#answer-43282620

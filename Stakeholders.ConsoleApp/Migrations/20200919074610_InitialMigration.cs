@@ -73,16 +73,22 @@ namespace Regira.Stakeholders.ConsoleApp.Migrations
                 name: "stakeholder_contacts",
                 columns: table => new
                 {
-                    stakeholder_id = table.Column<int>(nullable: false),
-                    contact_id = table.Column<int>(nullable: false),
+                    role_giver_id = table.Column<int>(nullable: false),
+                    role_bearer_id = table.Column<int>(nullable: false),
                     role_id = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("pk_stakeholder_contacts", x => new { x.stakeholder_id, x.contact_id, x.role_id });
+                    table.PrimaryKey("pk_stakeholder_contacts", x => new { x.role_giver_id, x.role_bearer_id, x.role_id });
                     table.ForeignKey(
-                        name: "fk_stakeholder_contacts_stakeholders_contact_id",
-                        column: x => x.contact_id,
+                        name: "fk_stakeholder_contacts_stakeholders_role_bearer_id",
+                        column: x => x.role_bearer_id,
+                        principalTable: "stakeholders",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "fk_stakeholder_contacts_stakeholders_stakeholder_id",
+                        column: x => x.role_giver_id,
                         principalTable: "stakeholders",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
@@ -92,18 +98,12 @@ namespace Regira.Stakeholders.ConsoleApp.Migrations
                         principalTable: "contact_roles",
                         principalColumn: "id",
                         onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "fk_stakeholder_contacts_stakeholders_stakeholder_id",
-                        column: x => x.stakeholder_id,
-                        principalTable: "stakeholders",
-                        principalColumn: "id",
-                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
-                name: "ix_stakeholder_contacts_contact_id",
+                name: "ix_stakeholder_contacts_role_bearer_id",
                 table: "stakeholder_contacts",
-                column: "contact_id");
+                column: "role_bearer_id");
 
             migrationBuilder.CreateIndex(
                 name: "ix_stakeholder_contacts_role_id",

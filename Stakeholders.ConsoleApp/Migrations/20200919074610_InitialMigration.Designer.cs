@@ -9,7 +9,7 @@ using Regira.Stakeholders.Library.Data;
 namespace Regira.Stakeholders.ConsoleApp.Migrations
 {
     [DbContext(typeof(StakeholdersContext))]
-    [Migration("20200911152257_InitialMigration")]
+    [Migration("20200919074610_InitialMigration")]
     partial class InitialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -73,23 +73,23 @@ namespace Regira.Stakeholders.ConsoleApp.Migrations
 
             modelBuilder.Entity("Regira.Stakeholders.Core.Entities.StakeholderContact", b =>
                 {
-                    b.Property<int>("StakeholderId")
-                        .HasColumnName("stakeholder_id")
+                    b.Property<int>("RoleGiverId")
+                        .HasColumnName("role_giver_id")
                         .HasColumnType("int");
 
-                    b.Property<int>("ContactId")
-                        .HasColumnName("contact_id")
+                    b.Property<int>("RoleBearerId")
+                        .HasColumnName("role_bearer_id")
                         .HasColumnType("int");
 
                     b.Property<int>("RoleId")
                         .HasColumnName("role_id")
                         .HasColumnType("int");
 
-                    b.HasKey("StakeholderId", "ContactId", "RoleId")
+                    b.HasKey("RoleGiverId", "RoleBearerId", "RoleId")
                         .HasName("pk_stakeholder_contacts");
 
-                    b.HasIndex("ContactId")
-                        .HasName("ix_stakeholder_contacts_contact_id");
+                    b.HasIndex("RoleBearerId")
+                        .HasName("ix_stakeholder_contacts_role_bearer_id");
 
                     b.HasIndex("RoleId")
                         .HasName("ix_stakeholder_contacts_role_id");
@@ -215,10 +215,17 @@ namespace Regira.Stakeholders.ConsoleApp.Migrations
 
             modelBuilder.Entity("Regira.Stakeholders.Core.Entities.StakeholderContact", b =>
                 {
-                    b.HasOne("Regira.Stakeholders.Core.Entities.Stakeholder", "Contact")
+                    b.HasOne("Regira.Stakeholders.Core.Entities.Stakeholder", "RoleBearer")
                         .WithMany()
-                        .HasForeignKey("ContactId")
-                        .HasConstraintName("fk_stakeholder_contacts_stakeholders_contact_id")
+                        .HasForeignKey("RoleBearerId")
+                        .HasConstraintName("fk_stakeholder_contacts_stakeholders_role_bearer_id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Regira.Stakeholders.Core.Entities.Stakeholder", "RoleGiver")
+                        .WithMany("Contacts")
+                        .HasForeignKey("RoleGiverId")
+                        .HasConstraintName("fk_stakeholder_contacts_stakeholders_stakeholder_id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -226,13 +233,6 @@ namespace Regira.Stakeholders.ConsoleApp.Migrations
                         .WithMany()
                         .HasForeignKey("RoleId")
                         .HasConstraintName("fk_stakeholder_contacts_contact_roles_role_id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Regira.Stakeholders.Core.Entities.Stakeholder", "Stakeholder")
-                        .WithMany("Contacts")
-                        .HasForeignKey("StakeholderId")
-                        .HasConstraintName("fk_stakeholder_contacts_stakeholders_stakeholder_id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
