@@ -90,7 +90,7 @@ namespace Regira.Stakeholders.ConsoleApp
 
                 // clean up invalid contacts
                 var tree = stakeholders.ToStakeholdersTree();
-                var treeContacts = tree.SelectMany(node => node.Value.Contacts ?? new List<StakeholderContact>())
+                var treeContacts = tree.SelectMany(node => node.Value.Subordinates ?? new List<StakeholderContact>())
                     .ToList();
                 var invalidContacts = contacts
                     .Except(treeContacts)

@@ -3,7 +3,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using MySql.Data.MySqlClient;
 using Regira.Extensions;
 using Regira.Stakeholders.Core.Entities;
 using Regira.Stakeholders.Library.Data;
@@ -59,9 +58,9 @@ namespace Regira.Stakeholders.ConsoleApp
 
             var tree = Query(targetDb, 100);
             Console.Clear();
-            foreach (var node in tree)
-            {
-                Console.WriteLine($"{node.Level}. {new string("....".Repeat(node.Level).ToArray())}{node.Value.GetTitle()} (#{node.Value.Id})");
+            foreach (var node in tree) {
+                var spacer = new string("....".Repeat(node.Level).ToArray());
+                Console.WriteLine($"{node.Level}. {spacer}{node.Value.Title} (#{node.Value.Id})");
             }
 
             Console.WriteLine();
@@ -106,20 +105,19 @@ namespace Regira.Stakeholders.ConsoleApp
         {
             var randomizer = new Randomizer();
             var maxId = db.Stakeholders.Max(x => x.Id);
-            var ids = Enumerable.Range(0, n).Select(_ => randomizer.Number(1, maxId)).ToArray();
-            var param = new MySqlParameter("stakeholder_id", string.Join(",", ids));
-            var start = DateTime.Now;
+            var ids = Enumerable.Range(0, n).Select(_ => randomizer.Number(1, maxId)).ToList();
 
-            var resultIds = db.StakeholderContacts.FromSqlInterpolated($"CALL contacts_offspring({param},{null})")
+            var start = DateTime.Now;
+            var resultIds = db.StakeholderContacts.FromSqlInterpolated($"CALL contacts_offspring({string.Join(",", ids)},{null})")
                 .ToList()
                 .SelectMany(c => new[] { c.RoleGiverId, c.RoleBearerId })
                 .Distinct()
                 .ToList();
             var end1 = (DateTime.Now - start).TotalSeconds;
             var stakeholders = db.Stakeholders.Where(x => resultIds.Contains(x.Id))
-                .Include(x => x.Contacts)
+                .Include(x => x.Subordinates)
                 .ThenInclude(c => c.RoleGiver)
-                .Include(x => x.Contacts)
+                .Include(x => x.Subordinates)
                 .ThenInclude(c => c.RoleBearer)
                 .ToList();
             start = DateTime.Now;

@@ -11,7 +11,8 @@ namespace Regira.Stakeholders.Library.Extensions
         public static TreeList<Stakeholder> ToStakeholdersTree(this IEnumerable<Stakeholder> items)
         {
             var stakeholders = items.AsList();
-            var contacts = stakeholders.SelectMany(x => x.Contacts ?? new StakeholderContact[0])
+            var contacts = stakeholders.SelectMany(x => (x.Superiors ?? new StakeholderContact[0]).Concat(x.Subordinates ?? new List<StakeholderContact>()))
+                .Distinct()
                 .ToList();
 
             return ToTreeList(stakeholders, contacts);

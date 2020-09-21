@@ -9,7 +9,7 @@ using Regira.Stakeholders.Library.Data;
 namespace Regira.Stakeholders.ConsoleApp.Migrations
 {
     [DbContext(typeof(StakeholdersContext))]
-    [Migration("20200919074610_InitialMigration")]
+    [Migration("20200920162547_InitialMigration")]
     partial class InitialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -216,16 +216,16 @@ namespace Regira.Stakeholders.ConsoleApp.Migrations
             modelBuilder.Entity("Regira.Stakeholders.Core.Entities.StakeholderContact", b =>
                 {
                     b.HasOne("Regira.Stakeholders.Core.Entities.Stakeholder", "RoleBearer")
-                        .WithMany()
+                        .WithMany("OwnerContacts")
                         .HasForeignKey("RoleBearerId")
-                        .HasConstraintName("fk_stakeholder_contacts_stakeholders_role_bearer_id")
+                        .HasConstraintName("fk_stakeholder_contacts_stakeholders_stakeholder_id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Regira.Stakeholders.Core.Entities.Stakeholder", "RoleGiver")
-                        .WithMany("Contacts")
+                        .WithMany("OwnedContacts")
                         .HasForeignKey("RoleGiverId")
-                        .HasConstraintName("fk_stakeholder_contacts_stakeholders_stakeholder_id")
+                        .HasConstraintName("fk_stakeholder_contacts_stakeholders_role_giver_id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

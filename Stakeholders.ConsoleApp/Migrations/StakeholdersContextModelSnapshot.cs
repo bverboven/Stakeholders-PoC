@@ -214,16 +214,16 @@ namespace Regira.Stakeholders.ConsoleApp.Migrations
             modelBuilder.Entity("Regira.Stakeholders.Core.Entities.StakeholderContact", b =>
                 {
                     b.HasOne("Regira.Stakeholders.Core.Entities.Stakeholder", "RoleBearer")
-                        .WithMany()
+                        .WithMany("OwnerContacts")
                         .HasForeignKey("RoleBearerId")
-                        .HasConstraintName("fk_stakeholder_contacts_stakeholders_role_bearer_id")
+                        .HasConstraintName("fk_stakeholder_contacts_stakeholders_stakeholder_id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Regira.Stakeholders.Core.Entities.Stakeholder", "RoleGiver")
-                        .WithMany("Contacts")
+                        .WithMany("OwnedContacts")
                         .HasForeignKey("RoleGiverId")
-                        .HasConstraintName("fk_stakeholder_contacts_stakeholders_stakeholder_id")
+                        .HasConstraintName("fk_stakeholder_contacts_stakeholders_role_giver_id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

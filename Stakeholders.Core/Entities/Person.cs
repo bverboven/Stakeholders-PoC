@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace Regira.Stakeholders.Core.Entities
+﻿namespace Regira.Stakeholders.Core.Entities
 {
     public class Person : Stakeholder
     {
@@ -8,6 +6,6 @@ namespace Regira.Stakeholders.Core.Entities
         public string GivenName { get; set; }
         public string FamilyName { get; set; }
 
-        public override string GetTitle() => $"{Salutation ?? string.Empty} {GivenName ?? string.Empty} {FamilyName ?? string.Empty}".Trim();
+        public override string Title => $"{Salutation ?? string.Empty} {GivenName ?? string.Empty} {FamilyName ?? string.Empty}".Trim();
     }
 }

@@ -6,12 +6,14 @@ namespace Regira.Stakeholders.Core.Abstractions
     public interface IStakeholder
     {
         StakeholderType StakeholderType { get; set; }
+        string Title { get; }
+
         string Kbo { get; set; }
         string Phone { get; set; }
         string Email { get; set; }
         Address Address { get; set; }
         ICollection<AccountNumber> BankAccounts { get; set; }
-
-        string GetTitle();
+        ICollection<StakeholderContact> Superiors { get; set; }
+        ICollection<StakeholderContact> Subordinates { get; set; }
     }
 }

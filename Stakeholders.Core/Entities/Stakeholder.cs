@@ -1,4 +1,7 @@
 ﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
 using Regira.Entities.Abstractions;
 using Regira.Stakeholders.Core.Abstractions;
 
@@ -14,15 +17,32 @@ namespace Regira.Stakeholders.Core.Entities
     {
         public int Id { get; set; }
         public StakeholderType StakeholderType { get; set; }
+        public abstract string Title { get; }
 
         public string Phone { get; set; }
         public string Email { get; set; }
         public string Kbo { get; set; }
         public Address Address { get; set; } = new Address();
-        public ICollection<AccountNumber> BankAccounts { get; set; }
-        public ICollection<StakeholderContact> Contacts { get; set; }
         public string Note { get; set; }
 
-        public abstract string GetTitle();
+        public ICollection<AccountNumber> BankAccounts { get; set; }
+
+        // RoleGivers
+        public ICollection<StakeholderContact> Superiors { get; set; }
+        // RoleReceivers
+        public ICollection<StakeholderContact> Subordinates { get; set; }
+        [NotMapped]
+        public ICollection<StakeholderContact> Contacts
+        {
+            get
+            {
+                if (Superiors == null || Subordinates == null)
+                {
+                    return null;
+                }
+
+                return new ReadOnlyCollection<StakeholderContact>(Superiors.Concat(Subordinates).ToList());
+            }
+        }
     }
 }
